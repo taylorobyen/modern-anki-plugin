@@ -1,0 +1,3 @@
+mypy
+aqt[qt6]
+anki
