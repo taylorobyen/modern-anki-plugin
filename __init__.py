@@ -1,8 +1,9 @@
-from aqt import dialogs, gui_hooks, mw
+from aqt import dialogs, gui_hooks
 from aqt.browser.browser import Browser
-from anki.decks import DeckId
-from anki.notes import Note
+from .browser_utils import add_card
 from typing import cast, Optional
+from anki.notes import Note
+from aqt.qt import qconnect
 
 def refresh_browser(note: Note):
     """
@@ -13,19 +14,8 @@ def refresh_browser(note: Note):
     if browser:
         browser.search()
 
-def update_current_deck(browser: Browser):
-    """
-    Update the current deck when navigating the browser if the
-    current selection is a deck. This allows the current deck
-    to be opened when adding new cards.
-    """
-    selected_items = browser.sidebar._selected_items()
-    if len(selected_items) < 1:
-        return
-    
-    selected_item = selected_items[0]
-    if selected_item.search_node.deck:
-        mw.deckBrowser.set_current_deck(DeckId(selected_item.id))
+def update_add_card_choosers(browser: Browser):
+    qconnect(browser.form.actionAdd.triggered, lambda: add_card(browser))
 
 gui_hooks.add_cards_did_add_note.append(refresh_browser)
-gui_hooks.browser_did_change_row.append(update_current_deck)
+gui_hooks.browser_menus_did_init.append(update_add_card_choosers)
