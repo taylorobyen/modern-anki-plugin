@@ -1,0 +1,14 @@
+line-length = 100
+
+[lint]
+select = ["ALL"]
+# D103	undocumented-public-function
+# D205	blank-line-after-summary
+# D212	multi-line-summary-first-line
+# E303  too-many-blank-lines
+extend-ignore = ["D103", "D205", "D212", "E303"]
+
+
+[format]
+quote-style = "double"
+docstring-code-format = true
